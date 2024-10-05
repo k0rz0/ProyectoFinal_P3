@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="17.0.12" class="java.beans.XMLDecoder">
+ <object class="co.edu.uniquindio.proyectofinal.proyectofinal.model.Billetera" id="Billetera0">
+  <void property="listaUsuarios">
+   <void method="add">
+    <object class="co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario">
+     <void property="correo">
+      <string>leo@gmail.com</string>
+     </void>
+     <void property="direccion">
+      <string>av. siempre viva</string>
+     </void>
+     <void property="idUsuario">
+      <string>1</string>
+     </void>
+     <void property="nombre">
+      <string>Leo</string>
+     </void>
+     <void property="saldo">
+      <string>500000</string>
+     </void>
+     <void property="telefono">
+      <string>123456789</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario">
+     <void property="correo">
+      <string>ana@gmail.com</string>
+     </void>
+     <void property="direccion">
+      <string>calle falsa 123</string>
+     </void>
+     <void property="idUsuario">
+      <string>2</string>
+     </void>
+     <void property="nombre">
+      <string>Ana</string>
+     </void>
+     <void property="saldo">
+      <string>300000</string>
+     </void>
+     <void property="telefono">
+      <string>987654321</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario">
+     <void property="correo">
+      <string>carlos@hotmail.com</string>
+     </void>
+     <void property="direccion">
+      <string>plaza central 4</string>
+     </void>
+     <void property="idUsuario">
+      <string>3</string>
+     </void>
+     <void property="nombre">
+      <string>Carlos</string>
+     </void>
+     <void property="saldo">
+      <string>150000</string>
+     </void>
+     <void property="telefono">
+      <string>456123789</string>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

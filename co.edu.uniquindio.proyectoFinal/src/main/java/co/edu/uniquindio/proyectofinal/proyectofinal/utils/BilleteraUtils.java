@@ -35,7 +35,7 @@ public class BilleteraUtils {
         usuario.setDireccion("plaza central 4");
         usuario.setSaldo("150000");
         billetera.getListaUsuarios().add(usuario);
-
+        System.out.println("Información de la billetera creada");
         return billetera;
 
     }

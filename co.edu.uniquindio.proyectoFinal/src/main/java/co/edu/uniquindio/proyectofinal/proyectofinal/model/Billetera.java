@@ -3,18 +3,20 @@ package co.edu.uniquindio.proyectofinal.proyectofinal.model;
 import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.UsuarioException;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.services.IBilleteraService;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Billetera  implements IBilleteraService {
+public class Billetera  implements IBilleteraService, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private List<Usuario> listaUsuarios = new ArrayList<>();
-
-
     public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
-
+    public void setListaUsuarios(List<Usuario> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
+    }
     public void setUsuarios(List<Usuario> usuarios) {
         this.listaUsuarios = usuarios;
     }

@@ -1,9 +1,10 @@
 module co.edu.uniquindio.proyectofinal.proyectofinal {
     requires javafx.controls;
     requires javafx.fxml;
-
     requires org.kordamp.bootstrapfx.core;
     requires org.mapstruct;
+    requires java.desktop;
+    requires java.logging;
 
     opens co.edu.uniquindio.proyectofinal.proyectofinal to javafx.fxml;
     exports co.edu.uniquindio.proyectofinal.proyectofinal;
