@@ -28,6 +28,7 @@ public class ModelFactoryController implements IModelFactoryService {
     }
 
 
+
     private static class SingletonHolder {
         private final static ModelFactoryController eINSTANCE = new ModelFactoryController();
     }

@@ -5,6 +5,7 @@ module co.edu.uniquindio.proyectofinal.proyectofinal {
     requires org.mapstruct;
     requires java.desktop;
     requires java.logging;
+    requires com.rabbitmq.client;
 
     opens co.edu.uniquindio.proyectofinal.proyectofinal to javafx.fxml;
     exports co.edu.uniquindio.proyectofinal.proyectofinal;

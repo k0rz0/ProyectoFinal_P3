@@ -1,14 +1,10 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.viewController;
 
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.ResourceBundle;
-
-import co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.controller.ModelFactoryController;
 import co.edu.uniquindio.proyectofinal.proyectofinal.controller.UsuarioController;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
+import co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.consumer.controller.ModelFactoryController;
+import co.edu.uniquindio.proyectofinal.proyectofinal.utils.RabbitMessageListener;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,9 +12,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import static co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.util.Constantes.QUEUE_NUEVA_PUBLICACION;
 
-public class UsuarioViewController {
+public class PruebaRabbitViewController implements RabbitMessageListener {
+
     UsuarioController usuarioController;
     ObservableList<UsuarioDTO> listaUsuarioDTO = FXCollections.observableArrayList();
     UsuarioDTO usuarioSeleccionado;
@@ -82,6 +82,8 @@ public class UsuarioViewController {
     void initialize() {
         usuarioController = new UsuarioController();
         initView();
+        modelFactoryController.addRabbitMessageListener(this);
+        modelFactoryController.iniciarConsumidor();
     }
 
     private void initView() {
@@ -127,40 +129,41 @@ public class UsuarioViewController {
 
     @FXML
     void onCrearUsuario(ActionEvent event) {
-        crearUsuario();
+        crearUsuario(null);
     }
 
-    private void crearUsuario() {
+    private void crearUsuario(String message) {
         if (validarCampos()) {
             UsuarioDTO usuarioDTO = contruirUsuarioDTO();
             if (usuarioController.crearUsuario(usuarioDTO)) {
-                mostrarMensaje("Notificación Usuario", "Usuario creado", "El Usuario se ha creado con exito", Alert.AlertType.INFORMATION);
-
                 listaUsuarioDTO.add(usuarioDTO);
                 tableUsuario.getItems().clear();
                 tableUsuario.getItems().addAll(listaUsuarioDTO);
                 tableUsuario.getSortOrder().add(colIdUsuario);
                 limpiarCampos();
-
-                enviarDataRabbit(usuarioDTO);
             }
         }else {
             mostrarMensaje("Notificación Usuario", "Error al crear el usuario", "Por favor llene todos los campos", Alert.AlertType.ERROR);
         }
     }
 
-    private void enviarDataRabbit(UsuarioDTO usuarioDTO) {
+    private void finalizarAccion(String message, String accion) {
+        UsuarioDTO usuarioDTORabbit = recibirDataRabbit(message);
+        mostrarMensaje("Notificación Usuario", "Usuario creado", "El Usuario se ha creado con exito", Alert.AlertType.INFORMATION);
 
-        String mensaje = "";
-        mensaje += "CREAR_USUARIO;";
-        mensaje += usuarioDTO.idUsuario() + ";";
-        mensaje += usuarioDTO.nombre() + ";";
-        mensaje += usuarioDTO.correo() + ";";
-        mensaje += usuarioDTO.telefono() + ";";
-        mensaje += usuarioDTO.direccion() + ";";
-        mensaje += usuarioDTO.saldo() + ";";
+        if (accion.equals("actualizar")) {
+            listaUsuarioDTO.remove(usuarioDTORabbit);
+        } else if (accion.equals("eliminar")) {
+            listaUsuarioDTO.remove(usuarioDTORabbit);
+            return;
+        }
 
-        modelFactoryController.producirMensaje(QUEUE_NUEVA_PUBLICACION, mensaje);
+        listaUsuarioDTO.add(usuarioDTORabbit);
+        tableUsuario.getItems().clear();
+        tableUsuario.getItems().addAll(listaUsuarioDTO);
+        tableUsuario.getSortOrder().add(colIdUsuario);
+        limpiarCampos();
+
     }
 
     private void limpiarCampos() {
@@ -181,6 +184,32 @@ public class UsuarioViewController {
         actualizarUsuario();
     }
 
+    @Override
+    public void onMessageReceived(String message) {
+        Platform.runLater(() -> {
+
+            if (message.contains("CREAR_USUARIO")) {
+                crearUsuario(message);
+            } else if (message.contains("ACTUALIZAR_USUARIO")) {
+                actualizarUsuario();
+            } else if (message.contains("ELIMINAR_USUARIO")) {
+                eliminarUsuario();
+            }
+        });
+    }
+
+    private UsuarioDTO recibirDataRabbit(String message) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO(
+                message.split(";")[1],    //id
+                message.split(";")[2],    //nombre
+                message.split(";")[3],    //correo
+                message.split(";")[4],    //telefono
+                message.split(";")[5],    //direccion
+                message.split(";")[6]);    //saldo
+
+        return usuarioDTO;
+    }
+
     private void actualizarUsuario() {
         if (validarCampos()) {
             UsuarioDTO usuarioDTO = contruirUsuarioDTO();
@@ -199,6 +228,8 @@ public class UsuarioViewController {
             mostrarMensaje("Notificación Usuario", "Error al actualizar el usuario", "Por favor llene todos los campos", Alert.AlertType.ERROR);
         }
     }
+
+
 
     @FXML
     void onEliminarUsuario(ActionEvent event) {
@@ -221,8 +252,8 @@ public class UsuarioViewController {
 
     private boolean validarCampos() {
         if (txtNombre.getText().isEmpty() || txtCorreo.getText().isEmpty() ||
-            txtSaldo.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
-            txtIdUsuario.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
+                txtSaldo.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
+                txtIdUsuario.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
             return false;
         } else{
             return true;
@@ -235,5 +266,6 @@ public class UsuarioViewController {
         aler.setContentText(contenido);
         aler.showAndWait();
     }
+
 
 }
