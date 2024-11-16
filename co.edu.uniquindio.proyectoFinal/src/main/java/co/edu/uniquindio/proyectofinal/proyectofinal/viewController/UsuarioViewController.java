@@ -12,6 +12,8 @@ import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -79,9 +81,36 @@ public class UsuarioViewController {
     private TextField txtTelefono;
 
     @FXML
+    private TextField txtBuscarUsuario;
+
+    @FXML
+    void onCleanSearch(ActionEvent event) {
+        txtBuscarUsuario.setText("");
+    }
+    @FXML
     void initialize() {
         usuarioController = new UsuarioController();
         initView();
+        initSearch();
+    }
+    private void initSearch(){
+
+        FilteredList<UsuarioDTO> filteredData = new FilteredList<>(listaUsuarioDTO, b->true);
+        txtBuscarUsuario.textProperty().addListener((ObservableList,oldValue,newValue)->{
+            filteredData.setPredicate(usuarioSeleccionado ->{
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String loweCaseFilter = newValue.toLowerCase();
+                if (usuarioSeleccionado.nombre().toLowerCase().contains(loweCaseFilter)){
+                    return true;
+                }
+                return usuarioSeleccionado.idUsuario().toLowerCase().contains(loweCaseFilter);
+            });
+        });
+        SortedList<UsuarioDTO> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tableUsuario.comparatorProperty());
+        tableUsuario.setItems(sortedData);
     }
 
     private void initView() {
