@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyectofinal.proyectofinal.controller;
 
 import co.edu.uniquindio.proyectofinal.proyectofinal.controller.services.IModelFactoryService;
 import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.UsuarioException;
+import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.CuentaDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.mappers.BilleteraMapper;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Billetera;
@@ -26,7 +27,6 @@ public class ModelFactoryController implements IModelFactoryService {
         aler.setContentText(contenido);
         aler.showAndWait();
     }
-
 
 
     private static class SingletonHolder {
@@ -156,5 +156,9 @@ public class ModelFactoryController implements IModelFactoryService {
     }
     public int validation(String user, String password) {
         return Persistencia.validation(user,password);
+    }
+
+    public List<CuentaDTO> obtenerCuentas() {
+        return mapper.getCuentaDTO(billetera.getListaCuentas());
     }
 }

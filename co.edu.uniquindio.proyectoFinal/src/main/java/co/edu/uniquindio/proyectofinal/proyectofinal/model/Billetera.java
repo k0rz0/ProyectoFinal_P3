@@ -11,12 +11,24 @@ public class Billetera  implements IBilleteraService, Serializable {
 
     private static final long serialVersionUID = 1L;
     private List<Usuario> listaUsuarios = new ArrayList<>();
+    private List<Cuenta> listaCuentas = new ArrayList<>();
+
+    public List<Cuenta> getListaCuentas() {
+        return listaCuentas;
+    }
+
+    public void setListaCuentas(List<Cuenta> listaCuentas) {
+        this.listaCuentas = listaCuentas;
+    }
+
     public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
+
     public void setListaUsuarios(List<Usuario> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
     }
+
     public void setUsuarios(List<Usuario> usuarios) {
         this.listaUsuarios = usuarios;
     }

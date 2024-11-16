@@ -1,11 +1,11 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.model;
 
 public class Cuenta {
+    private String idCuenta;
+    private String nombreBanco;
+    private String numCuenta;
+    private String tipoCuenta;
 
-    String idCuenta;
-    String nombreBanco;
-    String numCuenta;
-    String tipoCuenta;
 
     public String getIdCuenta() {
         return idCuenta;

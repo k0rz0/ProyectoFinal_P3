@@ -1,5 +1,7 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.mapping.mappers;
+import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.CuentaDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
+import co.edu.uniquindio.proyectofinal.proyectofinal.model.Cuenta;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -17,6 +19,12 @@ public interface BilleteraMapper {
     Usuario usuarioDTOToUsuario(UsuarioDTO usuarioDTO);
     @IterableMapping(qualifiedByName = "usuarioToUsuarioDTO")
     List<UsuarioDTO> getUsuariosDTO(List<Usuario> listUsuarios);
+    //Cuenta
+    @Named("cuentaToCuentaDTO")
+    CuentaDTO cuentaToCuentaDTO(Cuenta cuenta);
+    Cuenta cuentaDTOToCuenta(CuentaDTO cuentaDTO);
+    @IterableMapping(qualifiedByName = "cuentaToCuentaDTO")
+    List<CuentaDTO> getCuentaDTO(List<Cuenta> listCuentas);
 
 
     /*@Named("transaccionToTransaccionDTO")
