@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.controller.
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+
 import java.nio.charset.StandardCharsets;
 
 public class ModelFactoryController implements IModelFactoryService {

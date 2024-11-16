@@ -184,31 +184,6 @@ public class PruebaRabbitViewController implements RabbitMessageListener {
         actualizarUsuario();
     }
 
-    @Override
-    public void onMessageReceived(String message) {
-        Platform.runLater(() -> {
-
-            if (message.contains("CREAR_USUARIO")) {
-                crearUsuario(message);
-            } else if (message.contains("ACTUALIZAR_USUARIO")) {
-                actualizarUsuario();
-            } else if (message.contains("ELIMINAR_USUARIO")) {
-                eliminarUsuario();
-            }
-        });
-    }
-
-    private UsuarioDTO recibirDataRabbit(String message) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO(
-                message.split(";")[1],    //id
-                message.split(";")[2],    //nombre
-                message.split(";")[3],    //correo
-                message.split(";")[4],    //telefono
-                message.split(";")[5],    //direccion
-                message.split(";")[6]);    //saldo
-
-        return usuarioDTO;
-    }
 
     private void actualizarUsuario() {
         if (validarCampos()) {
@@ -265,6 +240,60 @@ public class PruebaRabbitViewController implements RabbitMessageListener {
         aler.setHeaderText(header);
         aler.setContentText(contenido);
         aler.showAndWait();
+    }
+
+    //RabbitMQ
+    @Override
+    public void onMessageReceived(String message) {
+        Platform.runLater(() -> {
+
+            if (message.contains("CREAR_USUARIO")) {
+                crearUsuarioRabbit(message);
+            } else if (message.contains("ACTUALIZAR_USUARIO")) {
+                actualizarUsuario();
+            } else if (message.contains("ELIMINAR_USUARIO")) {
+                eliminarUsuario();
+            }
+        });
+    }
+
+    private void crearUsuarioRabbit(String message) {
+            UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+            listaUsuarioDTO.add(usuarioDTO);
+            tableUsuario.getItems().clear();
+            tableUsuario.getItems().addAll(listaUsuarioDTO);
+            tableUsuario.getSortOrder().add(colIdUsuario);
+            limpiarCampos();
+    }
+
+    private void actualizarUsuarioRabbit(String message) {
+        UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+        listaUsuarioDTO.add(usuarioDTO);
+        tableUsuario.getItems().clear();
+        tableUsuario.getItems().addAll(listaUsuarioDTO);
+        tableUsuario.getSortOrder().add(colIdUsuario);
+        limpiarCampos();
+    }
+
+    private void eliminarUsuarioRabbit(String message) {
+        UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+        listaUsuarioDTO.add(usuarioDTO);
+        tableUsuario.getItems().clear();
+        tableUsuario.getItems().addAll(listaUsuarioDTO);
+        tableUsuario.getSortOrder().add(colIdUsuario);
+        limpiarCampos();
+    }
+
+    private UsuarioDTO recibirDataRabbit(String message) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO(
+                message.split(";")[1],    //id
+                message.split(";")[2],    //nombre
+                message.split(";")[3],    //correo
+                message.split(";")[4],    //telefono
+                message.split(";")[5],    //direccion
+                message.split(";")[6]);    //saldo
+
+        return usuarioDTO;
     }
 
 

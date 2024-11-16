@@ -221,8 +221,8 @@ public class UsuarioViewController {
 
     private boolean validarCampos() {
         if (txtNombre.getText().isEmpty() || txtCorreo.getText().isEmpty() ||
-            txtSaldo.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
-            txtIdUsuario.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
+                txtSaldo.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
+                txtIdUsuario.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
             return false;
         } else{
             return true;
