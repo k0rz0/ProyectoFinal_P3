@@ -1,0 +1,4 @@
+admin=administrador
+passwordAdmin=@programacion3
+user=juan
+password=pablogay

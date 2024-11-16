@@ -11,7 +11,7 @@ import java.util.Calendar;
 public class BilleteraVirtual extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(BilleteraVirtual.class.getResource("crud-usuario-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(BilleteraVirtual.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Billetera Virtual!");
         stage.setScene(scene);

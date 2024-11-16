@@ -74,6 +74,7 @@ nov 15, 2024 11:59:51 A. M. co.edu.uniquindio.proyectofinal.proyectofinal.util
 INFORMACIÓN: agregarUsuario,Usuario agregado: pocho,2024-11-15
 nov 15, 2024 12:00:13 P. M. co.edu.uniquindio.proyectofinal.proyectofinal.utils.ArchivoUtil guardarRegistroLog
 INFORMACIÓN: agregarUsuario,Usuario agregado: ,2024-11-15
+<<<<<<< Updated upstream
 nov. 16, 2024 12:38:05 A. M. co.edu.uniquindio.proyectofinal.proyectofinal.utils.ArchivoUtil guardarRegistroLog
 INFORMACIÓN: inicioSesión,Inicio de sesión,2024-11-16
 nov. 16, 2024 12:42:05 A. M. co.edu.uniquindio.proyectofinal.proyectofinal.utils.ArchivoUtil guardarRegistroLog

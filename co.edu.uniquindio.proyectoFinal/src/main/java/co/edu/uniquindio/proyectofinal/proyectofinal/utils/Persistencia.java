@@ -3,16 +3,20 @@ package co.edu.uniquindio.proyectofinal.proyectofinal.utils;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Billetera;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Persistencia {
     public static final String RUTA_ARCHIVO_MODELO_BILLETERA_BINARIO = "persistencia/model.dat";
     public static final String RUTA_ARCHIVO_USUARIOS = "persistencia/archivoUsuarios.txt";
     public static final String RUTA_ARCHIVO_LOG = "persistencia/log/BilleteraLog.txt";
     public static final String RUTA_ARCHIVO_MODELO_BILLETERA_XML = "persistencia/model.xml";
+    public static final String RUTA_ARCHIVO_DB = "persistencia/db_properties.txt";
 
     public static void cargarDatosArchivos(Billetera billetera) throws FileNotFoundException, IOException {
         //cargar archivo de Usuarios
@@ -103,8 +107,44 @@ public class Persistencia {
             e.printStackTrace();
         }
     }
-    public static void guardaRegistroLog(String mensajeLog, int nivel, String accion)
-    {
+    public static void guardaRegistroLog(String mensajeLog, int nivel, String accion) {
         ArchivoUtil.guardarRegistroLog(mensajeLog, nivel, accion, RUTA_ARCHIVO_LOG);
     }
+
+    public static int validation(String user, String password) {
+
+
+        Properties properties = new Properties();
+        try (BufferedReader reader = new BufferedReader(new FileReader(RUTA_ARCHIVO_DB))) {
+            properties.load(reader);
+
+            // Validar datos de administrador y usuario normal
+            if (validateCredentials(properties, "admin", "passwordAdmin", user, password)) {
+                return 1;
+            }
+            if (validateCredentials(properties, "user", "password", user, password)) {
+                return 2;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    private static boolean validateCredentials(Properties properties, String userKey, String passwordKey, String user, String password) {
+        String userData = properties.getProperty(userKey);
+        String passwordData = properties.getProperty(passwordKey);
+
+        if (userData != null && passwordData != null) {
+            String[] users = userData.split("##");
+            String[] passwords = passwordData.split("##");
+
+            for (int i = 0; i < users.length && i < passwords.length; i++) {
+                if (users[i].trim().equals(user) && passwords[i].trim().equals(password)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

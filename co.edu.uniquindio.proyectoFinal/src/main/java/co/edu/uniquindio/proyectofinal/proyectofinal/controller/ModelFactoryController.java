@@ -154,4 +154,7 @@ public class ModelFactoryController implements IModelFactoryService {
     public void registrarAccionesSistema(String mensaje, int nivel, String accion) {
         Persistencia.guardaRegistroLog(mensaje, nivel, accion);
     }
+    public int validation(String user, String password) {
+        return Persistencia.validation(user,password);
+    }
 }
