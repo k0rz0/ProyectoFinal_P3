@@ -1,11 +1,13 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.controller;
 
 import co.edu.uniquindio.proyectofinal.proyectofinal.controller.services.IModelFactoryService;
+import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.CuentaException;
 import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.UsuarioException;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.CuentaDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.mappers.BilleteraMapper;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Billetera;
+import co.edu.uniquindio.proyectofinal.proyectofinal.model.Cuenta;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.Usuario;
 import co.edu.uniquindio.proyectofinal.proyectofinal.utils.BilleteraUtils;
 import co.edu.uniquindio.proyectofinal.proyectofinal.utils.Persistencia;
@@ -62,9 +64,11 @@ public class ModelFactoryController implements IModelFactoryService {
         }
         registrarAccionesSistema("Inicio de sesión", 1, "inicioSesión");
     }
+
     private void cargarDatosBase(){
         billetera = BilleteraUtils.inicializarDatos();
     }
+
     public Billetera getBilletera() {
         return billetera;
     }
@@ -72,6 +76,8 @@ public class ModelFactoryController implements IModelFactoryService {
     public List<UsuarioDTO> obtenerUsuarios() {
         return mapper.getUsuariosDTO(billetera.getListaUsuarios());
     }
+
+    //Crud Usuarios
 
     @Override
     public boolean crearUsuario(UsuarioDTO usuarioDTO) {
@@ -120,9 +126,66 @@ public class ModelFactoryController implements IModelFactoryService {
             return false;
         }
     }
+
+    //Crud Cuentas
+
+    @Override
+    public boolean crearCuenta(CuentaDTO cuentaDTO) {
+        try {
+            if (!billetera.verificarCuentaExistente(cuentaDTO.idCuenta(), true)){
+                Cuenta cuenta = mapper.cuentaDTOToCuenta(cuentaDTO);
+                billetera.getListaCuentas().add(cuenta);
+                registrarAccionesSistema("Cuenta agregada: " + cuenta.getNumCuenta(),1,"agregarCuenta");
+            }
+            return true;
+        }catch (CuentaException e){
+            mostrarMensaje("Notificación Cuenta", "Error al crear la cuenta", e.getMessage(), Alert.AlertType.ERROR);
+            registrarAccionesSistema(e.getMessage(),3,"agregarCuenta");
+            return false;
+        }
+    }
+
+    @Override
+    public boolean actualizarCuenta(CuentaDTO cuentaDTO) {
+        try {
+            if (billetera.verificarCuentaExistente(cuentaDTO.idCuenta(), false)) {
+                Cuenta cuenta = mapper.cuentaDTOToCuenta(cuentaDTO);
+                borrarCuenta(cuentaDTO.idCuenta());
+                billetera.getListaCuentas().add(cuenta);
+                registrarAccionesSistema("Cuenta actualizada: " + cuenta.getNumCuenta(),1,"actualizarCuenta");
+            }
+            return true;
+        }catch (Exception e){
+            mostrarMensaje("Notificacion Cuenta", "Error al actualizar la cuenta",  e.getMessage(), Alert.AlertType.ERROR);
+            registrarAccionesSistema(e.getMessage(),3,"actualizarCuenta");
+            return false;
+        }
+    }
+
+    @Override
+    public boolean eliminarCuenta(CuentaDTO cuentaDTO) {
+        try {
+            if (!billetera.verificarCuentaExistenteEliminar(cuentaDTO.idCuenta())) {
+                borrarCuenta(cuentaDTO.idCuenta());
+                registrarAccionesSistema("Cuenta eliminada: "+ cuentaDTO.idCuenta(),1,"eliminarCuenta");
+            }
+            return true;
+        } catch (Exception e) {
+            mostrarMensaje("Notificación Cuenta", "Error al eliminar la cuenta",  e.getMessage(), Alert.AlertType.ERROR);
+            registrarAccionesSistema(e.getMessage(),3,"eliminarCuenta");
+            return false;
+        }
+    }
+
+
     private void borrarUsuario(String idUsuario) {
         billetera.getListaUsuarios().removeIf(u -> u.getIdUsuario().equals(idUsuario));
     }
+
+    private void borrarCuenta(String idCuenta) {
+        billetera.getListaCuentas().removeIf(u -> u.getIdCuenta().equals(idCuenta));
+    }
+
     private void salvarDatosPrueba() {
         try {
             Persistencia.guardarUsuarios(getBilletera().getListaUsuarios());
@@ -130,6 +193,7 @@ public class ModelFactoryController implements IModelFactoryService {
             throw new RuntimeException(e);
         }
     }
+
     private void cargarDatosDesdeArchivos() {
         billetera = new Billetera();
         try {
@@ -138,6 +202,7 @@ public class ModelFactoryController implements IModelFactoryService {
             throw new RuntimeException(e);
         }
     }
+
     private void cargarResourceXML() {
         billetera = Persistencia.cargarRecursoBilleteraXML();
     }

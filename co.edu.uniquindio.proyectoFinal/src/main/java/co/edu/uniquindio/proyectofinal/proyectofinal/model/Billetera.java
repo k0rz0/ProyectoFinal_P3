@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.model;
 
+import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.CuentaException;
 import co.edu.uniquindio.proyectofinal.proyectofinal.exceptions.UsuarioException;
 import co.edu.uniquindio.proyectofinal.proyectofinal.model.services.IBilleteraService;
 
@@ -52,6 +53,27 @@ public class Billetera  implements IBilleteraService, Serializable {
         }
     }
 
+    @Override
+    public boolean verificarCuentaExistente(String idCuenta, boolean crear) throws CuentaException {
+        if (cuentaExistente(idCuenta) && crear){
+            throw new CuentaException("la cuenta con el id: " + idCuenta + " ya existe");
+        } else if (!cuentaExistente(idCuenta) && !crear) {
+            throw new CuentaException("la cuenta con el id: " + idCuenta + " no existe");
+        }else{
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean verificarCuentaExistenteEliminar(String idCuenta) throws CuentaException {
+        if (!cuentaExistente(idCuenta)) {
+            throw new CuentaException("la cuenta con el id: " + idCuenta + " no existe");
+        }else{
+            return false;
+        }
+    }
+
     private boolean usuarioExiste(String idUsuario) {
         boolean usuarioEncontrado = false;
 
@@ -62,5 +84,17 @@ public class Billetera  implements IBilleteraService, Serializable {
             }
         }
        return usuarioEncontrado;
+    }
+
+    private boolean cuentaExistente(String idCuenta) {
+        boolean cuentaEncontrado = false;
+
+        for(Cuenta cuenta : getListaCuentas()){
+            if (cuenta.getIdCuenta().equalsIgnoreCase(idCuenta)){
+                cuentaEncontrado = true;
+                break;
+            }
+        }
+        return cuentaEncontrado;
     }
 }
