@@ -15,8 +15,6 @@ import javafx.scene.control.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.util.Constantes.QUEUE_NUEVA_PUBLICACION;
-
 public class PruebaRabbitViewController implements RabbitMessageListener {
 
     UsuarioController usuarioController;
