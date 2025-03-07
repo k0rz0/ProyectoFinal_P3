@@ -1,14 +1,13 @@
 package co.edu.uniquindio.proyectofinal.proyectofinal.viewController;
 
-import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 import co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.controller.ModelFactoryController;
 import co.edu.uniquindio.proyectofinal.proyectofinal.controller.UsuarioController;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
+import co.edu.uniquindio.proyectofinal.proyectofinal.utils.RabbitMessageListener;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,11 +19,13 @@ import javafx.scene.control.*;
 
 import static co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.util.Constantes.QUEUE_NUEVA_PUBLICACION;
 
-public class UsuarioViewController {
+public class UsuarioViewController implements RabbitMessageListener {
     UsuarioController usuarioController;
     ObservableList<UsuarioDTO> listaUsuarioDTO = FXCollections.observableArrayList();
     UsuarioDTO usuarioSeleccionado;
     ModelFactoryController modelFactoryController = ModelFactoryController.getInstance();
+
+    co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.consumer.controller.ModelFactoryController modelFactoryController2 = co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.consumer.controller.ModelFactoryController.getInstance();
 
     @FXML
     private ResourceBundle resources;
@@ -92,6 +93,8 @@ public class UsuarioViewController {
         usuarioController = new UsuarioController();
         initView();
         initSearch();
+        modelFactoryController2.addRabbitMessageListener(this);
+        modelFactoryController2.iniciarConsumidor();
     }
     private void initSearch(){
 
@@ -166,14 +169,13 @@ public class UsuarioViewController {
                 mostrarMensaje("Notificación Usuario", "Usuario creado", "El Usuario se ha creado con exito", Alert.AlertType.INFORMATION);
 
                 listaUsuarioDTO.add(usuarioDTO);
-                tableUsuario.getItems().clear();
-                tableUsuario.getItems().addAll(listaUsuarioDTO);
                 tableUsuario.getSortOrder().add(colIdUsuario);
                 limpiarCampos();
 
                 enviarDataRabbit(usuarioDTO);
+
             }
-        }else {
+        } else {
             mostrarMensaje("Notificación Usuario", "Error al crear el usuario", "Por favor llene todos los campos", Alert.AlertType.ERROR);
         }
     }
@@ -263,6 +265,58 @@ public class UsuarioViewController {
         aler.setHeaderText(header);
         aler.setContentText(contenido);
         aler.showAndWait();
+    }
+
+    //RabbitMQ
+    @Override
+    public void onMessageReceived(String message) {
+
+            if (message.contains("CREAR_USUARIO")) {
+                crearUsuarioRabbit(message);
+            } else if (message.contains("ACTUALIZAR_USUARIO")) {
+                actualizarUsuario();
+            } else if (message.contains("ELIMINAR_USUARIO")) {
+                eliminarUsuario();
+            }
+    }
+
+    private void crearUsuarioRabbit(String message) {
+        UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+        if (!listaUsuarioDTO.contains(usuarioDTO)) {
+            listaUsuarioDTO.add(usuarioDTO);
+            tableUsuario.getSortOrder().add(colIdUsuario);
+            limpiarCampos();
+        }
+    }
+
+    private void actualizarUsuarioRabbit(String message) {
+        UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+        listaUsuarioDTO.add(usuarioDTO);
+        tableUsuario.getItems().clear();
+        tableUsuario.getItems().addAll(listaUsuarioDTO);
+        tableUsuario.getSortOrder().add(colIdUsuario);
+        limpiarCampos();
+    }
+
+    private void eliminarUsuarioRabbit(String message) {
+        UsuarioDTO usuarioDTO = recibirDataRabbit(message);
+        listaUsuarioDTO.add(usuarioDTO);
+        tableUsuario.getItems().clear();
+        tableUsuario.getItems().addAll(listaUsuarioDTO);
+        tableUsuario.getSortOrder().add(colIdUsuario);
+        limpiarCampos();
+    }
+
+    private UsuarioDTO recibirDataRabbit(String message) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO(
+                message.split(";")[1],    //id
+                message.split(";")[2],    //nombre
+                message.split(";")[3],    //correo
+                message.split(";")[4],    //telefono
+                message.split(";")[5],    //direccion
+                message.split(";")[6]);    //saldo
+
+        return usuarioDTO;
     }
 
 }

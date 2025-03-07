@@ -12,17 +12,17 @@ public class CuentaController implements ICuentaControllerService {
     }
     @Override
     public boolean crearCuenta(CuentaDTO cuentaDTO) {
-        return false;
+        return modelFactoryController.crearCuenta(cuentaDTO);
     }
 
     @Override
     public boolean actualizarCuenta(CuentaDTO cuentaDTO) {
-        return false;
+        return modelFactoryController.actualizarCuenta(cuentaDTO);
     }
 
     @Override
     public boolean eliminarCuenta(CuentaDTO cuentaDTO) {
-        return false;
+        return modelFactoryController.eliminarCuenta(cuentaDTO);
     }
 
     public List<CuentaDTO> obtenerCuentas() {
