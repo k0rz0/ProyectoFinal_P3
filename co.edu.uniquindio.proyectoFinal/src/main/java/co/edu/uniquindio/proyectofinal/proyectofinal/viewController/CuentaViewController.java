@@ -9,8 +9,6 @@ import java.util.ResourceBundle;
 import co.edu.uniquindio.proyectofinal.proyectofinal.controller.CuentaController;
 import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.CuentaDTO;
 import co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.controller.ModelFactoryController;
-import co.edu.uniquindio.proyectofinal.proyectofinal.controller.UsuarioController;
-import co.edu.uniquindio.proyectofinal.proyectofinal.mapping.dto.UsuarioDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,10 +16,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
-import static co.edu.uniquindio.proyectofinal.proyectofinal.rabbit.producer.util.Constantes.QUEUE_NUEVA_PUBLICACION;
 
 public class CuentaViewController{
     CuentaController cuentaController;

@@ -11,20 +11,29 @@ public class Usuario implements Serializable {
     private String correo;
     private String telefono;
     private String direccion;
-    private String Saldo;
-    /*private ArrayList<Cuenta> Cuentas = new ArrayList<>();*/
+    private String saldo;
+//    private ArrayList<Cuenta> cuentas = new ArrayList<>();
 
     public Usuario() {
     }
 
     public Usuario(String idUsuario, String saldo, String direccion, String telefono, String correo, String nombre) {
         this.idUsuario = idUsuario;
-        Saldo = saldo;
+        saldo = saldo;
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
         this.nombre = nombre;
+//        this.cuentas = cuentas;
     }
+
+//    public ArrayList<Cuenta> getCuentas() {
+//        return cuentas;
+//    }
+
+//    public void setCuentas(ArrayList<Cuenta> cuentas) {
+//        cuentas = cuentas;
+//    }
 
     public String getIdUsuario() {
         return idUsuario;
@@ -67,10 +76,10 @@ public class Usuario implements Serializable {
     }
 
     public String getSaldo() {
-        return Saldo;
+        return saldo;
     }
 
     public void setSaldo(String saldo) {
-        Saldo = saldo;
+        saldo = saldo;
     }
 }

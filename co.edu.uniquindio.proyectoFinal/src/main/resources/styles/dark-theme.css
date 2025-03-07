@@ -192,6 +192,12 @@
 }
 
 /*TableView Default*/
+.table-view,
+.table-view .column-header,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: transparent;
+}
 .table-view{
     -fx-background-color: derive(-fx-primary, 10%);
     -fx-font-size: 16px;
